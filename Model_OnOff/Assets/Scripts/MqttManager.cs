@@ -34,12 +34,12 @@ public class MqttManager : MonoBehaviour
         // register to message received 
         client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
 
-       // string clientId = Guid.NewGuid().ToString();
-        string clientId = "siheung_namu_moter";
+       string clientId = Guid.NewGuid().ToString();
+        //string clientId = "siheung_namu_moter";
         client.Connect(clientId);
 
         // subscribe to the topic "/home/temperature" with QoS 2 
-        client.Subscribe(new string[] { "siheung/namu/result" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+        client.Subscribe(new string[] { "ModelOnOff/result" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public class MqttManager : MonoBehaviour
     /// <param name="topic">버튼 주소</param>
     public void SendPublishButtonData(string topic,string sendData)
     {
-        client.Publish("siheung/namu/" + topic, System.Text.Encoding.Default.GetBytes(sendData));     
+        client.Publish("ModelOnOff/" + topic, System.Text.Encoding.Default.GetBytes(sendData));     
     }
  
     void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)

@@ -1,8 +1,8 @@
 Android
 PlayerPath?
-C:/SiheungDev/Siheung_ppakkomi/newSiheung.apk
+C:/SFT_Model_OnOff/Model_OnOff/SFT_OnOff.apk
 SceneListBegin?
-Assets/Scenes/SFT-moterConstrol.unity
+Assets/Scenes/SFT_OnOff.unity
 SceneListEnd?
 8c8e424198240cd5381e7765a781213f Assembly-CSharp.dll:.UIButtonMessage
 c4a75f38edea8a816bd024aa376031be Assembly-CSharp.dll:.TweenOrthoSize

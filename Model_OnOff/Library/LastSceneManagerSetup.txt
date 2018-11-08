@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/SFT-moterConstrol.unity
+- path: Assets/Scenes/SFT_OnOff.unity
   isLoaded: 1
   isActive: 1

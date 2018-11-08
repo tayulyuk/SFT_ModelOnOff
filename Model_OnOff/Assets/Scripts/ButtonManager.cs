@@ -53,14 +53,14 @@ public class ButtonManager : MonoBehaviour
     public void SendAllButtonSetting()
     {
         if (transform.name == "Button_Moter_1")
-            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().Button_1_State == "1") ? true : false);
+            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().Button_1_State == "1") ? false : true);
         if (transform.name == "Button_Moter_2")
-            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().Button_2_State == "1") ? true : false);
+            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().Button_2_State == "1") ? false : true);
         if (transform.name == "Button_Moter_3")
-            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().Button_3_State == "1") ? true : false);
+            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().Button_3_State == "1") ? false : true);
         if (transform.name == "Button_Moter_4")
-            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().Button_4_State == "1") ? true : false);
+            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().Button_4_State == "1") ? false : true);
         if (transform.name == "Button_Power")
-            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().PowerButtonState == "1") ? true : false);
+            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().PowerButtonState == "1") ? false : true);
     }
 }
