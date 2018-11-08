@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppakkomi", "Assembly-CSharp.csproj", "{B10D0D8F-529D-75E1-0726-411E70C8D8CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ppakkomi", "Assembly-CSharp-Editor.csproj", "{46C8BFDC-51F8-C9E8-FB3B-9D7632DFB68C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B10D0D8F-529D-75E1-0726-411E70C8D8CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B10D0D8F-529D-75E1-0726-411E70C8D8CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B10D0D8F-529D-75E1-0726-411E70C8D8CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B10D0D8F-529D-75E1-0726-411E70C8D8CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46C8BFDC-51F8-C9E8-FB3B-9D7632DFB68C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46C8BFDC-51F8-C9E8-FB3B-9D7632DFB68C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46C8BFDC-51F8-C9E8-FB3B-9D7632DFB68C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46C8BFDC-51F8-C9E8-FB3B-9D7632DFB68C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
