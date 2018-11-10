@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SFT-moterConstrol.unity
+    path: Assets/Scenes/SFT_OnOff.unity
     guid: fdcb9ead7aaeba34faf428110c594986
   m_configObjects: {}

@@ -21,23 +21,5 @@ public class SwitchingManager : MonoBehaviour
         onLabel.gameObject.SetActive(buttonState);
         offLabel.gameObject.SetActive(!buttonState);      
     }
-
-
-    /// <summary>
-    /// 버튼 클릭시 서버로 1&0 값을 보낸다.
-    /// </summary>
-    public void SendSwitchData()
-    {
-        MqttManager mqttManager = GameObject.Find("UI Root (3D)").GetComponent<MqttManager>();
-        if (transform.name == "Button_Power")
-            mqttManager.SendPublishButtonData("buttonPower", (mqttManager.PowerButtonState == "1") ? "0" : "1");
-        if (transform.name == "Button_Moter_1")
-            mqttManager.SendPublishButtonData("button1", (mqttManager.Button_1_State == "1") ? "0" : "1");
-        if (transform.name == "Button_Moter_2")
-            mqttManager.SendPublishButtonData("button2", (mqttManager.Button_2_State == "1") ? "0" : "1");
-        if (transform.name == "Button_Moter_3")
-            mqttManager.SendPublishButtonData("button3", (mqttManager.Button_3_State == "1") ? "0" : "1");
-        if (transform.name == "Button_Moter_4")
-            mqttManager.SendPublishButtonData("button4", (mqttManager.Button_4_State == "1") ? "0" : "1");
-    }
+   
 }

@@ -35,6 +35,11 @@ public class ButtonManager : MonoBehaviour
 
     /// <summary>
     /// 버튼의 스위칭 명령   0->1   1->0변환 명령.
+    /// 이유: 반대로 보여 줘야 한다.
+    /// 끔(0)을 아두이노로 보낸다.(끔버튼을 누를때)  -> 스위칭된 현재 버튼은 반대의 켬상태로 보여진다.(켜진줄 안다)
+    /// 켬(1)을 아두이노로 보낸다.(켬버튼을 누를때) -> 스위칭된 현재 버튼은  반대의 꺼짐상태가 된다.(꺼진줄 안다)
+    /// 
+    /// 아두이노로 부터 0을 다시 받기위해선 0을 보내야 한다.
     /// </summary>
     /// <param name="order"></param>
     /// <returns></returns>
@@ -48,19 +53,5 @@ public class ButtonManager : MonoBehaviour
         else
             v = "0";
         return v;
-    }
-
-    public void SendAllButtonSetting()
-    {
-        if (transform.name == "Button_Moter_1")
-            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().Button_1_State == "1") ? false : true);
-        if (transform.name == "Button_Moter_2")
-            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().Button_2_State == "1") ? false : true);
-        if (transform.name == "Button_Moter_3")
-            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().Button_3_State == "1") ? false : true);
-        if (transform.name == "Button_Moter_4")
-            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().Button_4_State == "1") ? false : true);
-        if (transform.name == "Button_Power")
-            SendMessage("SendSwitchData", (GameObject.Find("UI Root (3D)").GetComponent<MqttManager>().PowerButtonState == "1") ? false : true);
     }
 }
