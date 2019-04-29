@@ -8,14 +8,7 @@ using System;
 public class MqttManager : MonoBehaviour
 {
     private MqttClient client;
-    /// <summary>
-    /// 서버로 부터 받아 파싱후 저장.
-    /// </summary>
-    public string GetPowerButton;
-    public string GetButton_1;
-    public string GetButton_2;
-    public string GetButton_3;
-    public string GetButton_4;
+   
     /// <summary>
     /// 서버로 부터 받은 버튼들의 상태.
     /// </summary>
@@ -36,16 +29,17 @@ public class MqttManager : MonoBehaviour
     public GameObject button3Object;
     public GameObject button4Object;
 
-    public GameObject errorPopUpObject;
+    public GameObject loadingPopUpObject;
     public GameObject reConnectPopUpObject;
-    public bool isError; // error message 들어오면 팝업 띠워주자.
-    public bool isReConnect; // 아두이노 wifi통신이 다시 접속했다는 메시지 창.
+   // public bool isError; // error message 들어오면 팝업 띠워주자.
+  //  public bool isReConnect; // 아두이노 wifi통신이 다시 접속했다는 메시지 창. -- 사용자가 불안해 한다.  고민하다 수정.
     public string currentButton;  // 명령 버튼명을 저장후  서버로 부터 받은 번호와 같은지 비교하기 위해 저장.
     public string currentButtonState;// 명령 버튼의 상태를 저장후  서버로 부터 받은 번호와 같은지 비교하기 위해 저장.
-    private bool isLoading; // 버튼 누르고 로딩 화면 보여 줄려고.
-
+    public bool isLoading; // 버튼 누르고 로딩 화면 보여 줄려고.
+    public float time; // 로딩이 3초 이상 될때는 화면을 꺼줘라. 다시 누를수 있도록.
     void Start()
     {
+        time = 0;
         // create client instance 
         client = new MqttClient(IPAddress.Parse("119.205.235.214"), 1883, false, null);
 
@@ -58,6 +52,8 @@ public class MqttManager : MonoBehaviour
 
         // subscribe to the topic "/home/temperature" with QoS 2 
         client.Subscribe(new string[] { "ModelOnOff/result" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+
+        SendPublishButtonData("ping", "ping");
     }
 
     /// <summary>
@@ -75,8 +71,8 @@ public class MqttManager : MonoBehaviour
         Debug.Log("M: " + System.Text.Encoding.UTF8.GetString(e.Message));
 
         //moter constroler의 wifi가 불안정하여 다시 접속했다.
-        if (System.Text.Encoding.UTF8.GetString(e.Message) == "Reconnected")
-            isReConnect = true;
+      //  if (System.Text.Encoding.UTF8.GetString(e.Message) == "Reconnected")
+      //      isReConnect = true;
 
         // 검증 하고 (보낸 번호와 버튼이 같은지 ) 아니라면 3번 전송.
         AllMessageParsing(System.Text.Encoding.UTF8.GetString(e.Message));    
@@ -99,13 +95,13 @@ public class MqttManager : MonoBehaviour
         else if (message == " " && message == null)
         {
             v = false;
-            isError = true;
+           // isError = true;
             Debug.Log("empty message:" + v);
         }        
         else 
         {
             v = false;
-            isError = true;
+           // isError = true;
             Debug.Log("잘못된 명령 메시지 입니다. : " + message + ":" + v);
         }
         return v;
@@ -120,10 +116,10 @@ public class MqttManager : MonoBehaviour
         }
 
         //팝업 메시지 띠우기.
-       errorPopUpObject.SetActive(isError);
+       loadingPopUpObject.SetActive(isLoading);
        
         //아두이도 접속 창 띠우기.
-       reConnectPopUpObject.SetActive(isReConnect);
+     //  reConnectPopUpObject.SetActive(isReConnect);
     }
 
     /// <summary>
@@ -222,21 +218,33 @@ public class MqttManager : MonoBehaviour
 
     public IEnumerator ReSendToServer()
     {
-        Debug.Log("Re Message Send To Server");
-        yield return new WaitForSeconds(.2f);
+        yield return new WaitForSeconds(.1f);
 
         if (currentButtonState != Button_1_State)
         {
+            Debug.Log("Message ReSend To Server 1");
             isLoading = true;
-            yield return new WaitForSeconds(.2f);
+            SendPublishButtonData(currentButton, currentButtonState);
 
-            Debug.Log("Button_1_State :   error");
+            if(time < 3)
+                time += .1f;
+            else
+            {
+                isLoading = false;
+                time = 0;
+                yield break;
+            }
+
+            yield return new WaitForSeconds(.1f);
+
+            Debug.Log("Message ReSend To Server 2");
             StartCoroutine(ReSendToServer());
-           
+            time += .1f;
         }
         else
         {
             isLoading = false;
+            time = 0;
             yield break;
         }
         /*
@@ -287,16 +295,7 @@ public class MqttManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 현제 order 버튼 서버로 부터 받은 버튼 비교
-    /// 현제 order 버튼 상태와 서버로 부터 받은 버튼 비교
-    /// </summary>
-    /// <returns></returns>
-    private bool ChackReturnOrder()
-    {
-        if(GetButton_1 == Button_1_State || currentButtonState == Button_1_State){}
-        return false;
-    }
+ 
 
     /// <summary>
     /// 서버로 부터 받은 정보를 나눈다.

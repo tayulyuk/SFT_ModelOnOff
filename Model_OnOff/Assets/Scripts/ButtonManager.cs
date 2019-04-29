@@ -15,10 +15,10 @@ public class ButtonManager : MonoBehaviour
     }
     private void OnClick()
     {
-        if (transform.name == "reConnectButton")
-            mqttManager.isReConnect = false;
-        if (transform.name == "errorButton")
-            mqttManager.isError = false;
+       // if (transform.name == "reConnectButton")
+      //      mqttManager.isReConnect = false;
+        if (transform.name == "loadingButton")
+            mqttManager.isLoading = false;
         if (transform.name == "Button - Exit")
             Application.Quit();
         if (transform.name == "Button_Moter_1")

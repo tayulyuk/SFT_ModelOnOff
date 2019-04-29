@@ -225,10 +225,11 @@
      <Compile Include="Assets\NGUI\Scripts\UI\UITexture.cs" />
      <Compile Include="Assets\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
-     <Compile Include="Assets\PowerButtonManager.cs" />
      <Compile Include="Assets\Scripts\ButtonManager.cs" />
      <Compile Include="Assets\Scripts\GetAllDataFromArduino.cs" />
+     <Compile Include="Assets\Scripts\Loading.cs" />
      <Compile Include="Assets\Scripts\MqttManager.cs" />
+     <Compile Include="Assets\Scripts\PowerButtonManager.cs" />
      <Compile Include="Assets\Scripts\SwitchingManager.cs" />
      <None Include="Assets\NGUI\Examples\Shaders\Unlit - Depth Cutout.shader" />
      <None Include="Assets\NGUI\ReadMe - 3.12.0.txt" />
