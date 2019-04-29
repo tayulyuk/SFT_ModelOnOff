@@ -273,7 +273,7 @@
      <None Include="Assets\NGUI\Examples\Models\Orc Armor\Orc Armor.shader" />
      <None Include="Assets\NGUI\Examples\Resources\Localization.txt" />
  <Reference Include="Unity.PackageManagerUI.Editor">
- <HintPath>C:/SFT_OnOFF/Model_OnOff/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+ <HintPath>C:/SFT_Model_OnOff/Model_OnOff/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>C:/Program Files/Unity 2018.1.0b6/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

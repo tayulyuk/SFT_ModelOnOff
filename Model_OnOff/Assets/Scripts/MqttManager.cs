@@ -7,13 +7,28 @@ using System;
 
 public class MqttManager : MonoBehaviour
 {
-    private MqttClient client;    
+    private MqttClient client;
+    /// <summary>
+    /// 서버로 부터 받아 파싱후 저장.
+    /// </summary>
+    public string GetPowerButton;
+    public string GetButton_1;
+    public string GetButton_2;
+    public string GetButton_3;
+    public string GetButton_4;
+    /// <summary>
+    /// 서버로 부터 받은 버튼들의 상태.
+    /// </summary>
     public string PowerButtonState;
     public string Button_1_State;
     public string Button_2_State;
     public string Button_3_State;
     public string Button_4_State;
-    public bool isOne; // broad cast 사용하기 위해.    
+
+    /// <summary>
+    /// 버튼 최종 정렬하기 위해 한번 실행.
+    /// </summary>
+    public bool isOne; 
 
     public GameObject buttonPowerObject;
     public GameObject button1Object;
@@ -25,6 +40,8 @@ public class MqttManager : MonoBehaviour
     public GameObject reConnectPopUpObject;
     public bool isError; // error message 들어오면 팝업 띠워주자.
     public bool isReConnect; // 아두이노 wifi통신이 다시 접속했다는 메시지 창.
+    public string currentButton;  // 명령 버튼명을 저장후  서버로 부터 받은 번호와 같은지 비교하기 위해 저장.
+    public string currentButtonState;// 명령 버튼의 상태를 저장후  서버로 부터 받은 번호와 같은지 비교하기 위해 저장.
 
     void Start()
     {
@@ -53,13 +70,14 @@ public class MqttManager : MonoBehaviour
  
     void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
     {        
+        //TODO test후 꼭 주석처리 해라.
         Debug.Log("M: " + System.Text.Encoding.UTF8.GetString(e.Message));
 
         //moter constroler의 wifi가 불안정하여 다시 접속했다.
         if (System.Text.Encoding.UTF8.GetString(e.Message) == "Reconnected")
             isReConnect = true;
 
-        ///test 끝나고 다시 연결해라.
+        // 검증 하고 (보낸 번호와 버튼이 같은지 ) 아니라면 3번 전송.
         AllMessageParsing(System.Text.Encoding.UTF8.GetString(e.Message));    
         //각 버튼들 정렬 - 현재 받은 값으로
         isOne = true;   
@@ -133,13 +151,87 @@ public class MqttManager : MonoBehaviour
     /// 서버로 부터 받은 정보를 각 변수에 저장한다.
     /// </summary>
     /// <param name="getMessage">서버로 부터 받은 정보.</param>
-    private void AllMessageParsing(string getMessage)
+    private bool AllMessageParsing(string getMessage)
     {
         Button_1_State = GetParserString(getMessage, "|button1=", "|");
         Button_2_State = GetParserString(getMessage, "button2=", "|");
         Button_3_State = GetParserString(getMessage, "button3=", "|");
         Button_4_State = GetParserString(getMessage, "button4=", "|");
         PowerButtonState = GetParserString(getMessage, "buttonPower=", "|");
+
+        //정상.  버튼의 상태를 보여주면 된다.  아니라면  다시 보낸다.
+        if (currentButton == "button1" )
+        {
+            if (currentButtonState != Button_1_State)
+            {
+                Debug.Log("Button_1_State :   error");
+                StartCoroutine(ReSendToServer());
+                return false;
+            }
+            /*
+            다시 명령을 보내라
+                다시 신호를 보내라
+                    코루틴으로 보내라
+                        3번 버내라
+                            그중 걸리면 정지 하고 화면을 보여줘라
+                                아니면 다시 시도 하세요 문구를 보여줘라 - & 로딩을 보여줘라.
+             * */
+        }
+        if (currentButton == "button2")
+        {
+            if (currentButtonState != Button_2_State)
+            {
+                Debug.Log("Button_2_State :   error");
+                return false;
+            }
+        }
+        if (currentButton == "button3")
+        {
+            if (currentButtonState != Button_3_State)
+            {
+                Debug.Log("Button_3_State :   error");
+                return false;
+            }
+        }
+        if (currentButton == "button4")
+        {
+            if (currentButtonState != Button_4_State)
+            {
+                Debug.Log(" Button_4_State error");
+                return false;
+            }
+        }
+        if (currentButton == "buttonPower")
+        {
+            if (currentButtonState != PowerButtonState)
+            {
+                Debug.Log(" buttonState error");
+                return false;
+            }
+        }
+        else
+        {
+            Debug.Log(" button을 알수 없는 error  &  button : " + currentButton);
+            return false;
+        }
+        return false;
+    }
+
+    private IEnumerator ReSendToServer()
+    {
+        Debug.Log("Re Message Send To Server");
+        yield return new WaitForSeconds(.2f);
+    }
+
+    /// <summary>
+    /// 현제 order 버튼 서버로 부터 받은 버튼 비교
+    /// 현제 order 버튼 상태와 서버로 부터 받은 버튼 비교
+    /// </summary>
+    /// <returns></returns>
+    private bool ChackReturnOrder()
+    {
+        if(GetButton_1 == Button_1_State || currentButtonState == Button_1_State){}
+        return false;
     }
 
     /// <summary>
@@ -183,6 +275,28 @@ public class MqttManager : MonoBehaviour
             }
         }
         return getValue;
+    }
+
+    /// <summary>
+    /// 버튼의 스위칭 명령   0->1   1->0변환 명령.
+    /// 이유: 반대로 보여 줘야 한다.
+    /// 끔(0)을 아두이노로 보낸다.(끔버튼을 누를때)  -> 스위칭된 현재 버튼은 반대의 켬상태로 보여진다.(켜진줄 안다)
+    /// 켬(1)을 아두이노로 보낸다.(켬버튼을 누를때) -> 스위칭된 현재 버튼은  반대의 꺼짐상태가 된다.(꺼진줄 안다)
+    /// 
+    /// 아두이노로 부터 0을 다시 받기위해선 0을 보내야 한다.
+    /// </summary>
+    /// <param name="order"></param>
+    /// <returns></returns>
+    public string SendOrder(string order)
+    {
+        string v = "";
+        if (order == "1")
+            v = "0";
+        if (order == "0")
+            v = "1";
+        else
+            v = "0";
+        return v;
     }
 
 }
