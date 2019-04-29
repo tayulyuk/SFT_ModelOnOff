@@ -42,6 +42,7 @@ public class MqttManager : MonoBehaviour
     public bool isReConnect; // 아두이노 wifi통신이 다시 접속했다는 메시지 창.
     public string currentButton;  // 명령 버튼명을 저장후  서버로 부터 받은 번호와 같은지 비교하기 위해 저장.
     public string currentButtonState;// 명령 버튼의 상태를 저장후  서버로 부터 받은 번호와 같은지 비교하기 위해 저장.
+    private bool isLoading; // 버튼 누르고 로딩 화면 보여 줄려고.
 
     void Start()
     {
@@ -158,6 +159,7 @@ public class MqttManager : MonoBehaviour
         Button_3_State = GetParserString(getMessage, "button3=", "|");
         Button_4_State = GetParserString(getMessage, "button4=", "|");
         PowerButtonState = GetParserString(getMessage, "buttonPower=", "|");
+        /*
 
         //정상.  버튼의 상태를 보여주면 된다.  아니라면  다시 보낸다.
         if (currentButton == "button1" )
@@ -168,14 +170,14 @@ public class MqttManager : MonoBehaviour
                 StartCoroutine(ReSendToServer());
                 return false;
             }
-            /*
+    
             다시 명령을 보내라
                 다시 신호를 보내라
                     코루틴으로 보내라
                         3번 버내라
                             그중 걸리면 정지 하고 화면을 보여줘라
                                 아니면 다시 시도 하세요 문구를 보여줘라 - & 로딩을 보여줘라.
-             * */
+            
         }
         if (currentButton == "button2")
         {
@@ -214,13 +216,75 @@ public class MqttManager : MonoBehaviour
             Debug.Log(" button을 알수 없는 error  &  button : " + currentButton);
             return false;
         }
+*/
         return false;
     }
 
-    private IEnumerator ReSendToServer()
+    public IEnumerator ReSendToServer()
     {
         Debug.Log("Re Message Send To Server");
         yield return new WaitForSeconds(.2f);
+
+        if (currentButtonState != Button_1_State)
+        {
+            isLoading = true;
+            yield return new WaitForSeconds(.2f);
+
+            Debug.Log("Button_1_State :   error");
+            StartCoroutine(ReSendToServer());
+           
+        }
+        else
+        {
+            isLoading = false;
+            yield break;
+        }
+        /*
+        다시 명령을 보내라
+            다시 신호를 보내라
+                코루틴으로 보내라
+                    3번 버내라
+                        그중 걸리면 정지 하고 화면을 보여줘라
+                            아니면 다시 시도 하세요 문구를 보여줘라 - & 로딩을 보여줘라.
+         * */
+
+        if (currentButton == "button2")
+        {
+            if (currentButtonState != Button_2_State)
+            {
+                Debug.Log("Button_2_State :   error");
+               
+            }
+        }
+        if (currentButton == "button3")
+        {
+            if (currentButtonState != Button_3_State)
+            {
+                Debug.Log("Button_3_State :   error");
+                
+            }
+        }
+        if (currentButton == "button4")
+        {
+            if (currentButtonState != Button_4_State)
+            {
+                Debug.Log(" Button_4_State error");
+               
+            }
+        }
+        if (currentButton == "buttonPower")
+        {
+            if (currentButtonState != PowerButtonState)
+            {
+                Debug.Log(" buttonState error");
+                
+            }
+        }
+        else
+        {
+            Debug.Log(" button을 알수 없는 error  &  button : " + currentButton);
+            
+        }
     }
 
     /// <summary>

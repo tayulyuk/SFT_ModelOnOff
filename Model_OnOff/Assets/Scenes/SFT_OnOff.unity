@@ -142,7 +142,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &60
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,6 +439,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c838ade6b5f64f45bb4226ef54b8578, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GetPowerButton: 
+  GetButton_1: 
+  GetButton_2: 
+  GetButton_3: 
+  GetButton_4: 
   PowerButtonState: 0
   Button_1_State: 0
   Button_2_State: 0
@@ -454,6 +459,8 @@ MonoBehaviour:
   reConnectPopUpObject: {fileID: 1178190472}
   isError: 0
   isReConnect: 0
+  currentButton: 
+  currentButtonState: 
 --- !u!4 &83
 Transform:
   m_ObjectHideFlags: 0
@@ -3176,8 +3183,7 @@ MonoBehaviour:
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
   mFont: {fileID: 114404354081757348, guid: fe2ebb95216a06b4ca9ba8bb9cda8dc9, type: 2}
-  mText: "Error code: \n\n\uC798\uBABB\uB41C \uBA54\uC2DC\uC9C0\uB97C \n\uBC1B\uACE0
-    \uC788\uC2B5\uB2C8\uB2E4."
+  mText: "\n\n\uB85C \uB529 \uC911 . ."
   mFontSize: 50
   mFontStyle: 1
   mAlignment: 2
@@ -5103,7 +5109,7 @@ GameObject:
   - component: {fileID: 1462258635}
   - component: {fileID: 1462258636}
   m_Layer: 9
-  m_Name: errorSprite
+  m_Name: loadingSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

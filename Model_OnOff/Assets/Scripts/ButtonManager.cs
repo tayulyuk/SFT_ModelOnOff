@@ -25,31 +25,36 @@ public class ButtonManager : MonoBehaviour
         {
             mqttManager.currentButton = "button1";
             mqttManager.currentButtonState = mqttManager.SendOrder(mqttManager.Button_1_State);
-           // mqttManager.SendPublishButtonData(mqttManager.currentButton, mqttManager.currentButtonState);
+            mqttManager.SendPublishButtonData(mqttManager.currentButton, mqttManager.currentButtonState);
+
+            //정상.  버튼의 상태를 보여주면 된다.  아니라면  다시 보낸다.
+
+            StartCoroutine(mqttManager.ReSendToServer());
+           
         }
         if (transform.name == "Button_Moter_2")
         {
             mqttManager.currentButton = "button2";
             mqttManager.currentButtonState = mqttManager.SendOrder(mqttManager.Button_2_State);
-            //mqttManager.SendPublishButtonData(mqttManager.currentButton, mqttManager.currentButtonState);
+            mqttManager.SendPublishButtonData(mqttManager.currentButton, mqttManager.currentButtonState);
         }
         if (transform.name == "Button_Moter_3")
         {
             mqttManager.currentButton = "button3";
             mqttManager.currentButtonState = mqttManager.SendOrder(mqttManager.Button_3_State);
-           // mqttManager.SendPublishButtonData(mqttManager.currentButton, mqttManager.currentButtonState);
+            mqttManager.SendPublishButtonData(mqttManager.currentButton, mqttManager.currentButtonState);
         }
         if (transform.name == "Button_Moter_4")
         {
             mqttManager.currentButton = "button4";
             mqttManager.currentButtonState = mqttManager.SendOrder(mqttManager.Button_4_State);
-            //mqttManager.SendPublishButtonData(mqttManager.currentButton, mqttManager.currentButtonState);
+            mqttManager.SendPublishButtonData(mqttManager.currentButton, mqttManager.currentButtonState);
         }
         if (transform.name == "Button_Power")
         {
             mqttManager.currentButton = "buttonPower";
             mqttManager.currentButtonState = mqttManager.SendOrder(mqttManager.PowerButtonState);
-            //mqttManager.SendPublishButtonData(mqttManager.currentButton, mqttManager.currentButtonState);
+            mqttManager.SendPublishButtonData(mqttManager.currentButton, mqttManager.currentButtonState);
         }    
     }
     /*
