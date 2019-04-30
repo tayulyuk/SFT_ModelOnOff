@@ -54,6 +54,7 @@ public class MqttManager : MonoBehaviour
         client.Subscribe(new string[] { "ModelOnOff/result" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
 
         SendPublishButtonData("ping", "ping");
+        //isOne = true;  
     }
 
     /// <summary>
@@ -76,8 +77,10 @@ public class MqttManager : MonoBehaviour
 
         // 검증 하고 (보낸 번호와 버튼이 같은지 ) 아니라면 3번 전송.
         AllMessageParsing(System.Text.Encoding.UTF8.GetString(e.Message));    
-        //각 버튼들 정렬 - 현재 받은 값으로
-        isOne = true;   
+        //각 버튼들 정렬 - 현재 받은 값으로 
+       // isOne = true;   
+
+        //여기서 검증 하고 버튼에 신호를 넣아 될지 선별해야 한다.
     }
 
     /// <summary>
@@ -148,151 +151,151 @@ public class MqttManager : MonoBehaviour
     /// 서버로 부터 받은 정보를 각 변수에 저장한다.
     /// </summary>
     /// <param name="getMessage">서버로 부터 받은 정보.</param>
-    private bool AllMessageParsing(string getMessage)
+    private void AllMessageParsing(string getMessage)
     {
         Button_1_State = GetParserString(getMessage, "|button1=", "|");
         Button_2_State = GetParserString(getMessage, "button2=", "|");
         Button_3_State = GetParserString(getMessage, "button3=", "|");
         Button_4_State = GetParserString(getMessage, "button4=", "|");
         PowerButtonState = GetParserString(getMessage, "buttonPower=", "|");
-        /*
-
-        //정상.  버튼의 상태를 보여주면 된다.  아니라면  다시 보낸다.
-        if (currentButton == "button1" )
-        {
-            if (currentButtonState != Button_1_State)
-            {
-                Debug.Log("Button_1_State :   error");
-                StartCoroutine(ReSendToServer());
-                return false;
-            }
-    
-            다시 명령을 보내라
-                다시 신호를 보내라
-                    코루틴으로 보내라
-                        3번 버내라
-                            그중 걸리면 정지 하고 화면을 보여줘라
-                                아니면 다시 시도 하세요 문구를 보여줘라 - & 로딩을 보여줘라.
-            
-        }
-        if (currentButton == "button2")
-        {
-            if (currentButtonState != Button_2_State)
-            {
-                Debug.Log("Button_2_State :   error");
-                return false;
-            }
-        }
-        if (currentButton == "button3")
-        {
-            if (currentButtonState != Button_3_State)
-            {
-                Debug.Log("Button_3_State :   error");
-                return false;
-            }
-        }
-        if (currentButton == "button4")
-        {
-            if (currentButtonState != Button_4_State)
-            {
-                Debug.Log(" Button_4_State error");
-                return false;
-            }
-        }
-        if (currentButton == "buttonPower")
-        {
-            if (currentButtonState != PowerButtonState)
-            {
-                Debug.Log(" buttonState error");
-                return false;
-            }
-        }
-        else
-        {
-            Debug.Log(" button을 알수 없는 error  &  button : " + currentButton);
-            return false;
-        }
-*/
-        return false;
     }
 
     public IEnumerator ReSendToServer()
     {
         yield return new WaitForSeconds(.1f);
-
-        if (currentButtonState != Button_1_State)
+        if (currentButton == "button1")
         {
-            Debug.Log("Message ReSend To Server 1");
-            isLoading = true;
-            SendPublishButtonData(currentButton, currentButtonState);
-
-            if(time < 3)
-                time += .1f;
-            else
+            if (currentButtonState != Button_1_State)
             {
-                isLoading = false;
-                time = 0;
-                yield break;
+                Debug.Log("Message ReSend To Server 1");
+                isLoading = true;
+                SendPublishButtonData(currentButton, currentButtonState);
+
+                if (time < 3)
+                    time += .1f;
+                else
+                {
+                    isLoading = false;
+                    time = 0;
+                    yield break;
+                }
+
+                yield return new WaitForSeconds(.1f);
+
+                Debug.Log("Message ReSend To Server 2");
+                StartCoroutine(ReSendToServer());
+               // time += .1f;
+                yield break;  // 넣줘야 할거 같다.
             }
+        }
+        else if (currentButton == "button2")
+        {
+            if (currentButtonState != Button_2_State)
+            {
+                Debug.Log("Message ReSend To Server 1");
+                isLoading = true;
+                SendPublishButtonData(currentButton, currentButtonState);
 
-            yield return new WaitForSeconds(.1f);
+                if (time < 3)
+                    time += .1f;
+                else
+                {
+                    isLoading = false;
+                    time = 0;
+                    yield break;
+                }
 
-            Debug.Log("Message ReSend To Server 2");
-            StartCoroutine(ReSendToServer());
-            time += .1f;
+                yield return new WaitForSeconds(.1f);
+
+                Debug.Log("Message ReSend To Server 2");
+                StartCoroutine(ReSendToServer());
+                time += .1f;
+               
+            }
+        }
+        else if (currentButton == "button3")
+        {
+            if (currentButtonState != Button_3_State)
+            {
+                Debug.Log("Message ReSend To Server 1");
+                isLoading = true;
+                SendPublishButtonData(currentButton, currentButtonState);
+
+                if (time < 3)
+                    time += .1f;
+                else
+                {
+                    isLoading = false;
+                    time = 0;
+                    yield break;
+                }
+
+                yield return new WaitForSeconds(.1f);
+
+                Debug.Log("Message ReSend To Server 2");
+                StartCoroutine(ReSendToServer());
+                time += .1f;
+               
+            }
+        }
+        else if (currentButton == "button4")
+        {
+            if (currentButtonState != Button_4_State)
+            {
+                Debug.Log("Message ReSend To Server 1");
+                isLoading = true;
+                SendPublishButtonData(currentButton, currentButtonState);
+
+                if (time < 3)
+                    time += .1f;
+                else
+                {
+                    isLoading = false;
+                    time = 0;
+                    yield break;
+                }
+
+                yield return new WaitForSeconds(.1f);
+
+                Debug.Log("Message ReSend To Server 2");
+                StartCoroutine(ReSendToServer());
+                time += .1f;
+               
+            }
+        }
+        else if (currentButton == "buttonPower")
+        {
+            if (currentButtonState != PowerButtonState)
+            {
+                Debug.Log("Message ReSend To Server 1");
+                isLoading = true;
+                SendPublishButtonData(currentButton, currentButtonState);
+
+                if (time < 3)
+                    time += .1f;
+                else
+                {
+                    isLoading = false;
+                    time = 0;
+                    yield break;
+                }
+
+                yield return new WaitForSeconds(.1f);
+
+                Debug.Log("Message ReSend To Server 2");
+                StartCoroutine(ReSendToServer());
+                time += .1f;
+               
+            }
         }
         else
         {
             isLoading = false;
             time = 0;
+            isOne = true; // 버튼 셋트 정렬.  1번
             yield break;
         }
-        /*
-        다시 명령을 보내라
-            다시 신호를 보내라
-                코루틴으로 보내라
-                    3번 버내라
-                        그중 걸리면 정지 하고 화면을 보여줘라
-                            아니면 다시 시도 하세요 문구를 보여줘라 - & 로딩을 보여줘라.
-         * */
-
-        if (currentButton == "button2")
-        {
-            if (currentButtonState != Button_2_State)
-            {
-                Debug.Log("Button_2_State :   error");
-               
-            }
-        }
-        if (currentButton == "button3")
-        {
-            if (currentButtonState != Button_3_State)
-            {
-                Debug.Log("Button_3_State :   error");
-                
-            }
-        }
-        if (currentButton == "button4")
-        {
-            if (currentButtonState != Button_4_State)
-            {
-                Debug.Log(" Button_4_State error");
-               
-            }
-        }
-        if (currentButton == "buttonPower")
-        {
-            if (currentButtonState != PowerButtonState)
-            {
-                Debug.Log(" buttonState error");
-                
-            }
-        }
-        else
-        {
-            Debug.Log(" button을 알수 없는 error  &  button : " + currentButton);
-            
-        }
+        yield break;
     }
 
  
