@@ -53,8 +53,8 @@ public class MqttManager : MonoBehaviour
         // subscribe to the topic "/home/temperature" with QoS 2 
         client.Subscribe(new string[] { "ModelOnOff/result" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
 
-        SendPublishButtonData("ping", "ping");
-        //isOne = true;  
+       // SendPublishButtonData("ping", "ping");  시흥에는 없는 부분
+        isOne = true;  
     }
 
     /// <summary>
@@ -69,18 +69,16 @@ public class MqttManager : MonoBehaviour
     void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
     {        
         //TODO test후 꼭 주석처리 해라.
-        Debug.Log("M: " + System.Text.Encoding.UTF8.GetString(e.Message));
-
-        //moter constroler의 wifi가 불안정하여 다시 접속했다.
-      //  if (System.Text.Encoding.UTF8.GetString(e.Message) == "Reconnected")
-      //      isReConnect = true;
+        //Debug.Log("M: " + System.Text.Encoding.UTF8.GetString(e.Message));
+        string ms = System.Text.Encoding.UTF8.GetString(e.Message);
 
         // 검증 하고 (보낸 번호와 버튼이 같은지 ) 아니라면 3번 전송.
-        AllMessageParsing(System.Text.Encoding.UTF8.GetString(e.Message));    
-        //각 버튼들 정렬 - 현재 받은 값으로 
-       // isOne = true;   
-
-        //여기서 검증 하고 버튼에 신호를 넣아 될지 선별해야 한다.
+        if (ms != "Reconnected")
+        {
+            AllMessageParsing(System.Text.Encoding.UTF8.GetString(e.Message));
+            //각 버튼들 정렬 - 현재 받은 값으로 
+           isOne = true;
+        }
     }
 
     /// <summary>
@@ -95,16 +93,22 @@ public class MqttManager : MonoBehaviour
             v = true;
         else if (message == "0")     
             v = false;
-        else if (message == " " && message == null)
+        else if (String.IsNullOrEmpty(message))
         {
             v = false;
            // isError = true;
             Debug.Log("empty message:" + v);
         }        
-        else 
+        else if(message == "Reconnected")
         {
             v = false;
            // isError = true;
+            Debug.Log("Recon : " + message + ":" + v);
+        }
+        else
+        {
+            v = false;
+            // isError = true;
             Debug.Log("잘못된 명령 메시지 입니다. : " + message + ":" + v);
         }
         return v;
@@ -120,9 +124,6 @@ public class MqttManager : MonoBehaviour
 
         //팝업 메시지 띠우기.
        loadingPopUpObject.SetActive(isLoading);
-       
-        //아두이도 접속 창 띠우기.
-     //  reConnectPopUpObject.SetActive(isReConnect);
     }
 
     /// <summary>
@@ -160,14 +161,20 @@ public class MqttManager : MonoBehaviour
         PowerButtonState = GetParserString(getMessage, "buttonPower=", "|");
     }
 
+    /// <summary>
+    /// 보낸 버튼의 신호를 확인하고 다른 값이 라면  보낸 값될때 까지 3초간 지속적으로 보낸다.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator ReSendToServer()
     {
+        SendPublishButtonData(currentButton, currentButtonState);
+
         yield return new WaitForSeconds(.1f);
         if (currentButton == "button1")
         {
             if (currentButtonState != Button_1_State)
             {
-                Debug.Log("Message ReSend To Server 1");
+                //Debug.Log("Message ReSend To Server 1");
                 isLoading = true;
                 SendPublishButtonData(currentButton, currentButtonState);
 
@@ -177,22 +184,24 @@ public class MqttManager : MonoBehaviour
                 {
                     isLoading = false;
                     time = 0;
+                    yield return new WaitForSeconds(.1f);
                     yield break;
                 }
-
-                yield return new WaitForSeconds(.1f);
-
-                Debug.Log("Message ReSend To Server 2");
-                StartCoroutine(ReSendToServer());
-               // time += .1f;
-                yield break;  // 넣줘야 할거 같다.
+                //Debug.Log("Message ReSend To Server 2");
+              StartCoroutine(ReSendToServer());
+            }
+            else // 두가지 조건이 같다면   기능 정지.
+            {
+                isLoading = false;
+                time = 0;
+                yield break;
             }
         }
         else if (currentButton == "button2")
         {
             if (currentButtonState != Button_2_State)
             {
-                Debug.Log("Message ReSend To Server 1");
+               // Debug.Log("Message ReSend To Server 1");
                 isLoading = true;
                 SendPublishButtonData(currentButton, currentButtonState);
 
@@ -202,22 +211,24 @@ public class MqttManager : MonoBehaviour
                 {
                     isLoading = false;
                     time = 0;
+                    yield return new WaitForSeconds(.1f);
                     yield break;
                 }
-
-                yield return new WaitForSeconds(.1f);
-
-                Debug.Log("Message ReSend To Server 2");
-                StartCoroutine(ReSendToServer());
-                time += .1f;
-               
+                //Debug.Log("Message ReSend To Server 2");
+                    StartCoroutine(ReSendToServer());
+            }
+            else // 두가지 조건이 같다면   기능 정지.
+            {
+                isLoading = false;
+                time = 0;
+                yield break;
             }
         }
         else if (currentButton == "button3")
         {
             if (currentButtonState != Button_3_State)
             {
-                Debug.Log("Message ReSend To Server 1");
+               // Debug.Log("Message ReSend To Server 1");
                 isLoading = true;
                 SendPublishButtonData(currentButton, currentButtonState);
 
@@ -227,22 +238,26 @@ public class MqttManager : MonoBehaviour
                 {
                     isLoading = false;
                     time = 0;
+                    yield return new WaitForSeconds(.1f);
                     yield break;
                 }
-
-                yield return new WaitForSeconds(.1f);
-
-                Debug.Log("Message ReSend To Server 2");
-                StartCoroutine(ReSendToServer());
-                time += .1f;
+               // Debug.Log("Message ReSend To Server 2");
+                
+               StartCoroutine(ReSendToServer());
                
+            }
+            else // 두가지 조건이 같다면   기능 정지.
+            {
+                isLoading = false;
+                time = 0;
+                yield break;
             }
         }
         else if (currentButton == "button4")
         {
             if (currentButtonState != Button_4_State)
             {
-                Debug.Log("Message ReSend To Server 1");
+                //Debug.Log("Message ReSend To Server 1");
                 isLoading = true;
                 SendPublishButtonData(currentButton, currentButtonState);
 
@@ -252,22 +267,26 @@ public class MqttManager : MonoBehaviour
                 {
                     isLoading = false;
                     time = 0;
+                    yield return new WaitForSeconds(.1f);
                     yield break;
                 }
 
-                yield return new WaitForSeconds(.1f);
-
-                Debug.Log("Message ReSend To Server 2");
-                StartCoroutine(ReSendToServer());
-                time += .1f;
-               
+                //Debug.Log("Message ReSend To Server 2");
+                
+                 StartCoroutine(ReSendToServer());
+            }
+            else // 두가지 조건이 같다면   기능 정지.
+            {
+                isLoading = false;
+                time = 0;
+                yield break;
             }
         }
         else if (currentButton == "buttonPower")
         {
             if (currentButtonState != PowerButtonState)
             {
-                Debug.Log("Message ReSend To Server 1");
+                //Debug.Log("Message ReSend To Server 1");
                 isLoading = true;
                 SendPublishButtonData(currentButton, currentButtonState);
 
@@ -277,25 +296,25 @@ public class MqttManager : MonoBehaviour
                 {
                     isLoading = false;
                     time = 0;
+                    yield return new WaitForSeconds(.1f);
                     yield break;
                 }
-
-                yield return new WaitForSeconds(.1f);
-
-                Debug.Log("Message ReSend To Server 2");
-                StartCoroutine(ReSendToServer());
-                time += .1f;
+               // Debug.Log("Message ReSend To Server 2");
+                
+               StartCoroutine(ReSendToServer());
                
+            }
+            else // 두가지 조건이 같다면   기능 정지.
+            {
+                isLoading = false;
+                time = 0;
+                yield break;
             }
         }
         else
         {
-            isLoading = false;
-            time = 0;
-            isOne = true; // 버튼 셋트 정렬.  1번
-            yield break;
+            Debug.Log("아런 경우도 있나? 버튼이");
         }
-        yield break;
     }
 
  
