@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/SFT_OnOff.unity
+- path: C:/Users/youk/Desktop/Model_OnOff/Assets/Scenes/SFT_OnOff.unity
   isLoaded: 1
   isActive: 1

@@ -69,7 +69,7 @@ public class MqttManager : MonoBehaviour
     void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
     {        
         //TODO test후 꼭 주석처리 해라.
-        //Debug.Log("M: " + System.Text.Encoding.UTF8.GetString(e.Message));
+        Debug.Log("M: " + System.Text.Encoding.UTF8.GetString(e.Message));
         string ms = System.Text.Encoding.UTF8.GetString(e.Message);
 
         // 검증 하고 (보낸 번호와 버튼이 같은지 ) 아니라면 3번 전송.
